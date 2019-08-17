@@ -7,6 +7,7 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 

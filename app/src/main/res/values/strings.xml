@@ -14,5 +14,5 @@
     <string name="override_deadline">Override Deadline:</string>
     <string name="not_set">Not Set</string>
     <string name="s">%d s</string>
-    <string name="finish_job">Finish Job</string>
+    <string name="finish_job">Schedule Wait Job</string>
 </resources>

@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         ComponentName serviceName = new ComponentName(
                 getPackageName(),
-                AsyncTaskJobService.class.getName()
+                AsyncJobService.class.getName()
         );
         JobInfo.Builder builder = new JobInfo.Builder(JOB_FINISH_ID, serviceName);
         builder

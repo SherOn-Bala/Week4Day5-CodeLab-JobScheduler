@@ -22,7 +22,7 @@
             android:name=".NotificationJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".AsyncTaskJobService"
+            android:name=".AsyncJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
