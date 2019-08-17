@@ -13,7 +13,6 @@ public class AsyncJobService extends JobService implements WaitTask.OnTaskComple
 
     private WaitTask waitTask;
     private JobParameters jobParameters;
-    private boolean reschedule = false;
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
@@ -22,11 +21,7 @@ public class AsyncJobService extends JobService implements WaitTask.OnTaskComple
         waitTask = new WaitTask(this);
         waitTask.execute();
 
-        Log.d(TAG, String.format(
-                Locale.US,
-                "onStartJob: %s",
-                reschedule ? "RESTARTING TASK" : "STARTING TASK"
-        ));
+        Log.d(TAG, "onStartJob: STARTING TASK");
 
         return true;
     }
@@ -37,9 +32,8 @@ public class AsyncJobService extends JobService implements WaitTask.OnTaskComple
             waitTask.cancel(true);
         }
 
-        reschedule = true;
         Toast.makeText(getApplicationContext(), "Job Failed", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onStopJob: TASK STOPPED");
+        Log.d(TAG, "onStopJob: TASK STOPPED...RESCHEDULING");
 
         return true;
     }
@@ -47,7 +41,7 @@ public class AsyncJobService extends JobService implements WaitTask.OnTaskComple
     @Override
     public void onTaskCompleted(boolean success) {
         jobFinished(jobParameters, !success);
-        reschedule = false;
+
         Log.d(TAG, "onTaskCompleted: TASK COMPLETE");
     }
 }

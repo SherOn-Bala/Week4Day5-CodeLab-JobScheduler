@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int JOB_ID = 0;
-    private static final int JOB_FINISH_ID = 1;
+    private static final int NOTIFICATION_JOB_ID = 0;
+    private static final int WAIT_JOB_ID = 1;
     private JobScheduler mScheduler;
 
     private RadioGroup networkOptions;
@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (i > 0){
+                if (i > 0) {
                     seekBarProgress.setText(String.format(getString(R.string.s), i));
-                }else {
+                } else {
                     seekBarProgress.setText(R.string.not_set);
                 }
             }
@@ -62,52 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void scheduleJob(View view) {
-
-        int selectedNetworkID = networkOptions.getCheckedRadioButtonId();
-        int selectedNetworkOption = JobInfo.NETWORK_TYPE_NONE;
-        int seekBarInteger = mSeekBar.getProgress();
-        boolean seekBarSet = seekBarInteger > 0;
-
-        switch (selectedNetworkID) {
-            case R.id.anyNetwork:
-                selectedNetworkOption = JobInfo.NETWORK_TYPE_ANY;
-                break;
-            case R.id.wifiNetwork:
-                selectedNetworkOption = JobInfo.NETWORK_TYPE_UNMETERED;
-                break;
-        }
-
-        ComponentName serviceName = new ComponentName(
+    public void scheduleNotificationJob(View view) {
+        scheduleJob(NOTIFICATION_JOB_ID, new ComponentName(
                 getPackageName(),
                 NotificationJobService.class.getName()
-        );
-        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, serviceName);
-        builder
-                .setRequiredNetworkType(selectedNetworkOption)
-                .setRequiresDeviceIdle(mDeviceIdleSwitch.isChecked())
-                .setRequiresCharging(mDeviceChargingSwitch.isChecked());
-
-        if (seekBarSet) {
-            builder.setOverrideDeadline(seekBarInteger * 1000);
-        }
-
-        mScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-
-        boolean constraintSet =
-                (selectedNetworkOption != JobInfo.NETWORK_TYPE_NONE) ||
-                        mDeviceChargingSwitch.isChecked() ||
-                        mDeviceIdleSwitch.isChecked() ||
-                        seekBarSet;
-
-        if (constraintSet) {
-            //Schedule the job and notify the user
-            JobInfo myJobInfo = builder.build();
-            mScheduler.schedule(myJobInfo);
-        } else {
-            Toast.makeText(this, "Please set at least one constraint",
-                    Toast.LENGTH_SHORT).show();
-        }
+        ));
     }
 
     public void cancelJobs(View view) {
@@ -118,7 +77,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void jobFinished(View view) {
+    public void scheduleWaitJob(View view) {
+        scheduleJob(WAIT_JOB_ID, new ComponentName(
+                getPackageName(),
+                AsyncJobService.class.getName()
+        ));
+    }
+
+    private void scheduleJob(int jobId, ComponentName serviceName) {
         int selectedNetworkID = networkOptions.getCheckedRadioButtonId();
         int selectedNetworkOption = JobInfo.NETWORK_TYPE_NONE;
         int seekBarInteger = mSeekBar.getProgress();
@@ -133,11 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        ComponentName serviceName = new ComponentName(
-                getPackageName(),
-                AsyncJobService.class.getName()
-        );
-        JobInfo.Builder builder = new JobInfo.Builder(JOB_FINISH_ID, serviceName);
+        JobInfo.Builder builder = new JobInfo.Builder(jobId, serviceName);
         builder
                 .setRequiredNetworkType(selectedNetworkOption)
                 .setRequiresDeviceIdle(mDeviceIdleSwitch.isChecked())
@@ -164,4 +126,5 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
+
 }

@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/margin"
-        android:onClick="scheduleJob"
+        android:onClick="scheduleNotificationJob"
         android:text="@string/schedule_job" />
 
     <Button
@@ -120,6 +120,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/margin"
-        android:onClick="jobFinished"
+        android:onClick="scheduleWaitJob"
         android:text="@string/finish_job" />
 </LinearLayout>
