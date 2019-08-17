@@ -48,6 +48,6 @@ public class AsyncJobService extends JobService implements WaitTask.OnTaskComple
     public void onTaskCompleted(boolean success) {
         jobFinished(jobParameters, !success);
         reschedule = false;
-        Log.d(TAG, "onStopJob: TASK COMPLETE");
+        Log.d(TAG, "onTaskCompleted: TASK COMPLETE");
     }
 }
